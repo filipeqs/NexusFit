@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: filipeqs/nexusfit.auth.api
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                configMapKeyRef:
+                  name: authdb-configmap
+                  key: connection_string
+            - name: ConnectionStrings__LogConnection
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-configmap
+                  key: connection_string
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 55105
+      targetPort: 80
+# LOCALHOT
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: auth-srv
+# spec:
+#   selector:
+#     app: auth
+#   type: LoadBalancer
+#   ports:
+#     - name: auth
+#       protocol: TCP
+#       port: 80
+#       targetPort: 80

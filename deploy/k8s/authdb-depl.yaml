@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authdb-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authdb
+  template:
+    metadata:
+      labels:
+        app: authdb
+    spec:
+      containers:
+        - name: authdb
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authdb
+                  key: SA_PASSWORD
+            - name: ACCEPT_EULA
+              value: 'Y'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authdb-srv
+spec:
+  selector:
+    app: authdb
+  ports:
+    - name: authdb
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+# LOCALHOST
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: authdb-srv
+# spec:
+#   selector:
+#     app: authdb
+#   type: LoadBalancer
+#   ports:
+#     - name: authdb
+#       protocol: TCP
+#       port: 1433
+#       targetPort: 1433

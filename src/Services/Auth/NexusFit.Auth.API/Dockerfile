@@ -7,7 +7,7 @@ RUN apt update && \
 WORKDIR /src
 COPY . .
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
 WORKDIR /vsdbg

@@ -27,12 +27,6 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    public async Task<ActionResult> Test()
-    {
-        return Ok("Works");
-    }
-
     [HttpPost]
     public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
     {

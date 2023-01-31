@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: elasticsearch-configmap
 data:
-  connection_string: http://elasticsearch-srv:9200
+  connection_string: http://elasticsearch:9200

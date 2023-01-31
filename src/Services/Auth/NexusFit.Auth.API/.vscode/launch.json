@@ -36,13 +36,13 @@
       "type": "coreclr",
       "request": "attach",
       "processId": 1,
-      "justMyCode": false, // set to `true` in debug configuration and `false` in release configuration
+      "justMyCode": true, // set to `true` in debug configuration and `false` in release configuration
       "pipeTransport": {
         "pipeProgram": "kubectl",
         "pipeArgs": [
           "exec",
           "-i",
-          "auth-depl-768877c5fb-x49hm", // name of the pod you debug.
+          "auth-depl-77f5d4d779-b6z6x", // name of the pod you debug.
           "--"
         ],
         "pipeCwd": "${workspaceFolder}",

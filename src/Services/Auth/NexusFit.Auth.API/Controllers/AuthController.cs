@@ -30,6 +30,7 @@ public class AuthController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
     {
+        _logger.LogInformation("Start");
         if (await _userManager.FindByEmailAsync(registerDto.Email) != null)
             return BadRequest(new ApiResponse((int)HttpStatusCode.BadRequest, "Email address already exists."));
 

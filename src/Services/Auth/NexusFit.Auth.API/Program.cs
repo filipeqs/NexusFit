@@ -8,8 +8,9 @@ using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.API.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
-using NexusFit.BuildingBlocks.Logging;
 using NexusFit.BuildingBlocks.Extensions;
+using NexusFit.BuildingBlocks.Logging;
+using NexusFit.BuildingBlocks.Logging.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,7 +57,9 @@ app.MapHealthChecks("/api/auth/hc", new HealthCheckOptions()
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MigrateDbContext<IdentityContext>((context, services) =>
 {

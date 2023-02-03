@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.Auth.API", "Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.BuildingBlocks.Extensions", "BuildingBlocks\NexusFit.BuildingBlocks.Extensions\NexusFit.BuildingBlocks.Extensions.csproj", "{11D86A96-98C1-48E7-AE5E-16793AFEAD63}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{75795366-6DBD-4674-86BC-EAE31E301118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Auth.FunctionalTests", "Services\Auth\tests\NexusFit.Auth.FunctionalTests\NexusFit.Auth.FunctionalTests.csproj", "{31904197-444D-4947-8E66-882B585D75E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{11D86A96-98C1-48E7-AE5E-16793AFEAD63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11D86A96-98C1-48E7-AE5E-16793AFEAD63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11D86A96-98C1-48E7-AE5E-16793AFEAD63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31904197-444D-4947-8E66-882B585D75E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31904197-444D-4947-8E66-882B585D75E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31904197-444D-4947-8E66-882B585D75E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31904197-444D-4947-8E66-882B585D75E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,8 @@ Global
 		{502EFDA6-440F-427A-B5A6-5A46A0A67454} = {92AB62C3-AAA9-4D28-896B-5EE0EE0368A8}
 		{AD5011C7-DC96-4E7C-87D7-FC6C4F480F26} = {C9C2F2A6-1F1F-4CFF-B0EE-9404C1D0E3D0}
 		{11D86A96-98C1-48E7-AE5E-16793AFEAD63} = {92AB62C3-AAA9-4D28-896B-5EE0EE0368A8}
+		{75795366-6DBD-4674-86BC-EAE31E301118} = {C9C2F2A6-1F1F-4CFF-B0EE-9404C1D0E3D0}
+		{31904197-444D-4947-8E66-882B585D75E5} = {75795366-6DBD-4674-86BC-EAE31E301118}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0398A85E-CF94-4BAC-9651-B57C728D6690}

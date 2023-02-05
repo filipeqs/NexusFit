@@ -1,5 +1,4 @@
-﻿using AutoFixture.Xunit2;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NexusFit.Auth.API.Dtos;
 using NexusFit.Auth.FunctionalTests.Helpers;
 using System.Net;
@@ -24,7 +23,7 @@ public class AuthControllerRegister : IAsyncLifetime
     public async Task DisposeAsync() => await _resetDatabase();
 
     [Fact]
-    public async Task RegisterUser_ShouldReturn_UserDto()
+    public async Task RegisterUser_ShouldReturn_Token()
     {
         var registerDto = new RegisterDto
         {
@@ -40,10 +39,10 @@ public class AuthControllerRegister : IAsyncLifetime
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var content = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-        var userDto = JsonSerializer.Deserialize<UserDto>(content, options);
-        
-        userDto.Should().NotBeNull();
-        userDto?.Email.Should().Be(registerDto.Email);
+        var user = JsonSerializer.Deserialize<UserDto>(content, options);
+
+        user.Should().NotBeNull();
+        user.Token.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -62,5 +61,39 @@ public class AuthControllerRegister : IAsyncLifetime
         var duplicatedResponse = await _client.PostAsync(AuthRoutes.Post.Register, request);
 
         duplicatedResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task RegisterInvalidEmail_ShouldReturn_BadRequest()
+    {
+        var registerDto = new RegisterDto
+        {
+            Email = "test@",
+            Password = "P@ssw0rd",
+            FirstName = "Test",
+            LastName = "Test",
+        };
+
+        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync(AuthRoutes.Post.Register, request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task RegisterInvalidPassword_ShouldReturn_BadRequest()
+    {
+        var registerDto = new RegisterDto
+        {
+            Email = "test@email.com",
+            Password = "password",
+            FirstName = "Test",
+            LastName = "Test",
+        };
+
+        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync(AuthRoutes.Post.Register, request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

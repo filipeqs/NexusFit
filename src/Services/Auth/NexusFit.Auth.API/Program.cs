@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.API.Extensions;
+using NexusFit.Auth.API.Helpers;
 using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
 using NexusFit.BuildingBlocks.Extensions;
@@ -40,6 +41,9 @@ builder.Services.AddHealthChecks()
 builder.Services.AddIdentityServices(
     builder.Configuration,
     builder.Environment);
+
+builder.Services.Configure<IdentityServerSettings>(options =>
+    builder.Configuration.GetSection("IdentityServer").Bind(options));
 
 builder.Services.AddExceptionHandlingServices();
 

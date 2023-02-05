@@ -1,10 +1,8 @@
 ﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NexusFit.Auth.API;
 using NexusFit.Auth.API.Data;
-using NexusFit.Auth.FunctionalTests.Authentication;
+using NexusFit.Auth.API.Helpers;
 using Respawn;
 using System.Data.Common;
 using System.Reflection;
@@ -35,8 +33,8 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
             .WithCleanUp(true)
             .Build();
 
-    private readonly TestcontainerDatabase _elasticSearchContainer =
-        new TestcontainersBuilder<ElasticsearchTestcontainer>()
+    private readonly IContainer _elasticSearchContainer =
+        new ContainerBuilder()
             .WithImage("docker.elastic.co/elasticsearch/elasticsearch:7.9.2")
             .WithExposedPort(9200)
             .WithCleanUp(true)
@@ -52,10 +50,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
         builder.UseContentRoot(Path.GetDirectoryName(path))
             .UseEnvironment("Tests")
-            .ConfigureAppConfiguration(cb =>
-            {
-                cb.AddJsonFile("appsettings.Tests.json", optional: false);
-            })
             .ConfigureTestServices(services =>
             {
                 services.RemoveAll(typeof(DbContextOptions<IdentityContext>));
@@ -63,12 +57,11 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
                 {
                     options.UseSqlServer($"{_dbContainer.ConnectionString}TrustServerCertificate=true;");
                 });
-                services.Configure<RouteOptions>(configuration);
-                services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = "Test";
-                    options.DefaultChallengeScheme = "Test";
-                }).AddScheme<AuthenticationSchemeOptions, AuthenticationTestHandler>("Test", opt => { });
+
+                services.AddSingleton<IConfiguration>(configuration);
+
+                services.Configure<IdentityServerSettings>(options => 
+                    configuration.GetSection("IdentityServer").Bind(options));
             });
 
         base.ConfigureWebHost(builder);

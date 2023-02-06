@@ -11,9 +11,7 @@ const routes: Routes = [
   {
     path: 'account',
     loadChildren: () =>
-      import('./account/account-routing.module').then(
-        (mod) => mod.AccountRoutingModule
-      ),
+      import('./account/account.module').then((mod) => mod.AccountModule),
   },
   {
     path: '**',

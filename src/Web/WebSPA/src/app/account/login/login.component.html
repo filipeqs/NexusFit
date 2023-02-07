@@ -1,28 +1,28 @@
 <div class="account-container">
-    <form class="account-form">
-        <div class="account-image"></div>
-        <div class="account-content">
-            <mat-form-field appearance="fill">
-                <mat-label>Enter your email</mat-label>
-                <input matInput type="text" />
-                <button mat-icon-button matSuffix></button>
-            </mat-form-field>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="account-form">
+    <div class="account-image"></div>
+    <div class="account-content">
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your email</mat-label>
+        <input matInput type="text" formControlName="email" />
+        <button mat-icon-button matSuffix></button>
+      </mat-form-field>
 
-            <mat-form-field appearance="fill">
-                <mat-label>Enter your password</mat-label>
-                <input matInput type="password" />
-                <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="hide = !hide"
-                    [attr.aria-label]="'Hide password'"
-                    [attr.aria-pressed]="hide"
-                >
-                    <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-            </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
 
-            <button mat-raised-button color="primary">Primary</button>
-        </div>
-    </form>
+      <button mat-raised-button color="primary">Primary</button>
+    </div>
+  </form>
 </div>

@@ -1,0 +1,23 @@
+<mat-form-field appearance="fill" class="form-field-container">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    type="{{ type }}"
+    matInput
+    [formControl]="ngControl.control"
+    autocomplete="off"
+  />
+
+  <mat-error
+    *ngIf="ngControl.control.touched && ngControl.control.errors?.required"
+  >
+    {{ label }} is <strong>required</strong>
+  </mat-error>
+
+  <mat-error *ngIf="ngControl.control.errors?.pattern"
+    >Invalid email address</mat-error
+  >
+
+  <mat-error *ngIf="ngControl.control.errors?.emailExists">
+    Email address is in use
+  </mat-error>
+</mat-form-field>

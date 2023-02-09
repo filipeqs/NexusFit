@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-login',
@@ -7,8 +8,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  hide = true;
   loginForm: FormGroup;
+
+  constructor(private accountService: AccountService) {}
 
   ngOnInit() {
     this.createLoginForm();
@@ -27,6 +29,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.loginForm.value);
+    this.accountService.login(this.loginForm.value).subscribe({
+      next: () => {},
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 }

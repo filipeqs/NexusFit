@@ -1,25 +1,13 @@
 .account {
-    &-container {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  &-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    &-form {
-        display: flex;
-        flex-direction: row;
-    }
-
-    &-image {
-        background-color: black;
-        width: 200px;
-    }
-
-    &-content {
-        display: flex;
-        flex-direction: column;
-        background-color: whitesmoke;
-        padding: 2rem;
-    }
+  &-form {
+    display: flex;
+    flex-direction: column;
+  }
 }

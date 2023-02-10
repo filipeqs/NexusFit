@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -8,11 +9,18 @@ import { AccountService } from '../account.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  returnUrl: string;
   loginForm: FormGroup;
+  errors: string[] = [];
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '';
     this.createLoginForm();
   }
 
@@ -29,11 +37,23 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.clearErrors();
+    this.login();
+  }
+
+  login() {
     this.accountService.login(this.loginForm.value).subscribe({
-      next: () => {},
+      next: () => {
+        this.router.navigateByUrl(this.returnUrl);
+      },
       error: (error) => {
         console.log(error);
+        this.errors.push('Invalid email or password');
       },
     });
+  }
+
+  clearErrors() {
+    this.errors = [];
   }
 }

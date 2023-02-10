@@ -10,7 +10,18 @@
       label="Password"
     ></app-password-input>
 
-    <button mat-raised-button color="primary" [disabled]="loginForm.invalid">
+    <ng-container *ngIf="errors">
+      <mat-error class="account-error" *ngFor="let error of errors">
+        {{ error }}
+      </mat-error>
+    </ng-container>
+
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="loginForm.invalid"
+    >
       Login
     </button>
   </form>

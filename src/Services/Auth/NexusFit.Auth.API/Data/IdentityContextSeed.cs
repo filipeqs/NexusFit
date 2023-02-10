@@ -26,7 +26,7 @@ namespace NexusFit.Auth.API.Data
 
                     await userManager.AddClaimsAsync(user, new List<Claim>()
                     {
-                        new Claim(JwtClaimTypes.Name, $"Filipe Silva"),
+                        new Claim(JwtClaimTypes.Email, user.Email),
                         new Claim(JwtClaimTypes.Role, "Student"),
                         new Claim(JwtClaimTypes.Role, "Admin")
                     });

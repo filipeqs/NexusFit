@@ -8,6 +8,7 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    canActivate: [AnonymousGuard],
   },
   { path: 'login', component: LoginComponent, canActivate: [AnonymousGuard] },
 ];

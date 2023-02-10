@@ -42,10 +42,22 @@ builder.Services.AddIdentityServices(
     builder.Configuration,
     builder.Environment);
 
+builder.Services.AddAuthentication("Bearer")
+.AddIdentityServerAuthentication("Bearer", options =>
+{
+    options.Authority = builder.Configuration.GetValue<string>("IdentityServer:Url");
+    options.RequireHttpsMetadata = false;
+});
+
 builder.Services.Configure<IdentityServerSettings>(options =>
     builder.Configuration.GetSection("IdentityServer").Bind(options));
 
 builder.Services.AddExceptionHandlingServices();
+
+builder.Services.AddCors(p => p.AddPolicy("clientapp", builder =>
+{
+    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -61,7 +73,6 @@ app.MapHealthChecks("/api/auth/hc", new HealthCheckOptions()
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
@@ -76,6 +87,7 @@ app.MigrateDbContext<IdentityContext>((context, services) =>
         .Wait();
 });
 
+app.UseCors("clientapp");
 app.UseAuthentication();
 app.UseIdentityServer();
 app.UseAuthorization();

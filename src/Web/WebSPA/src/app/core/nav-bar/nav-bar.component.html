@@ -1,0 +1,34 @@
+<div class="nav-container">
+  <mat-toolbar color="primary" class="nav-menu">
+    <button
+      mat-icon-button
+      (click)="snav.toggle()"
+      *ngIf="accountService.currentUser$ | async"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="!(accountService.currentUser$ | async)">
+      <mat-icon>home</mat-icon>
+    </button>
+    <h1 class="nav-menu-title">NexusFit</h1>
+
+    <span class="nav-spacer"></span>
+    <button mat-icon-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="nav-sidenav">
+    <mat-sidenav #snav [mode]="'over'" fixedTopGap="56">
+      <mat-nav-list>
+        <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{
+          nav
+        }}</a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

@@ -1,7 +1,9 @@
 ﻿using IdentityModel;
 using IdentityServer4;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NexusFit.Auth.API.Dtos;
 using NexusFit.Auth.API.Entities;
@@ -36,6 +38,24 @@ public class AuthController : ControllerBase
         _identityServerTools = identityServerTools;
     }
 
+    [HttpGet()]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == "email")?.Value;
+
+        var user = await _userManager.Users
+            .SingleOrDefaultAsync(q => q.Email == email);
+        var claims = await _userManager.GetClaimsAsync(user);
+        var token = await GetToken(claims.ToList());
+
+        return new UserDto
+        {
+            Token = token,
+            Email = user.Email
+        };
+    }
+
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
     {
@@ -54,7 +74,7 @@ public class AuthController : ControllerBase
         return new UserDto
         {
             Token = token,
-            Username = user.Email
+            Email = user.Email
         };
     }
 
@@ -82,6 +102,7 @@ public class AuthController : ControllerBase
 
         var claims = new List<Claim>()
         {
+            new Claim(JwtClaimTypes.Email, registerDto.Email),
             new Claim(JwtClaimTypes.Role, "Student"),
             new Claim(JwtClaimTypes.Role, "Admin")
         };
@@ -99,7 +120,7 @@ public class AuthController : ControllerBase
         return new UserDto
         {
             Token = token,
-            Username = user.Email
+            Email = user.Email
         };
     }
 

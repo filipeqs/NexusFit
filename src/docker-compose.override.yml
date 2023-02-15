@@ -39,3 +39,10 @@ services:
       - "ConnectionStrings:LogConnection=http://elasticsearch:9200"
     ports:
       - "55105:80"
+
+  angular-ui:
+    container_name: angular-ui
+    environment:
+      - BACKEND_BASE_URL=http://auth.api
+    ports:
+      - "4200:80"

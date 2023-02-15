@@ -124,7 +124,7 @@ public class AuthController : ControllerBase
         };
     }
 
-    [HttpGet("{email}")]
+    [HttpGet("userexists/{email}")]
     public async Task<bool> UserExists(string email)
     {
         return await _userManager.FindByEmailAsync(email) != null;

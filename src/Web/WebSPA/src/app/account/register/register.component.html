@@ -1,1 +1,43 @@
-<p>register works!</p>
+<div class="account-container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="account-form">
+    <app-generic-input
+      formControlName="email"
+      label="Email"
+    ></app-generic-input>
+
+    <app-generic-input
+      formControlName="firstName"
+      label="First Name"
+    ></app-generic-input>
+
+    <app-generic-input
+      formControlName="lastName"
+      label="Last Name"
+    ></app-generic-input>
+
+    <app-password-input
+      formControlName="password"
+      label="Password"
+    ></app-password-input>
+
+    <app-password-input
+      formControlName="confirmPassword"
+      label="Confirm Password"
+    ></app-password-input>
+
+    <ng-container *ngIf="errors">
+      <mat-error class="account-error" *ngFor="let error of errors">
+        {{ error }}
+      </mat-error>
+    </ng-container>
+
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="registerForm.invalid"
+    >
+      Register
+    </button>
+  </form>
+</div>

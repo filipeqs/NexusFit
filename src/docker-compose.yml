@@ -15,6 +15,12 @@ services:
     build:
       context: .
       dockerfile: Services/Auth/NexusFit.Auth.API/Dockerfile
+
+  angular-ui:
+    image: ${DOCKER_REGISTRY-}nexusfitauthapi
+    build:
+      context: .
+      dockerfile: Web/WebSPA/DockerFile
       
 volumes:
   elasticsearch-data:

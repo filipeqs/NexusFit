@@ -13,7 +13,22 @@
     <h1 class="nav-menu-title">NexusFit</h1>
 
     <span class="nav-spacer"></span>
-    <button mat-icon-button (click)="logout()">
+
+    <ng-container *ngIf="!(accountService.currentUser$ | async)">
+      <button mat-icon-button routerLink="/account/register">
+        <mat-icon>app_registration</mat-icon>
+      </button>
+
+      <button mat-icon-button routerLink="/account/login">
+        <mat-icon>login</mat-icon>
+      </button>
+    </ng-container>
+
+    <button
+      mat-icon-button
+      (click)="logout()"
+      *ngIf="accountService.currentUser$ | async"
+    >
       <mat-icon>logout</mat-icon>
     </button>
   </mat-toolbar>

@@ -4,6 +4,7 @@ metadata:
   name: ingress-service
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
   rules:
     - host: nexusfit.dev
@@ -16,3 +17,10 @@ spec:
                 name: auth-srv
                 port:
                   number: 55105
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: angular-ui-srv
+                port:
+                  number: 4200

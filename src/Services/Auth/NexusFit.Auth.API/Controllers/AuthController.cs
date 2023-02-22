@@ -38,7 +38,13 @@ public class AuthController : ControllerBase
         _identityServerTools = identityServerTools;
     }
 
-    [HttpGet()]
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        return Ok("new");
+    }
+
+    [HttpGet]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {

@@ -15,13 +15,13 @@
     <span class="nav-spacer"></span>
 
     <ng-container *ngIf="!(accountService.currentUser$ | async)">
-      <button mat-icon-button routerLink="/account/register">
+      <a mat-icon-button routerLink="/account/register">
         <mat-icon>app_registration</mat-icon>
-      </button>
+      </a>
 
-      <button mat-icon-button routerLink="/account/login">
+      <a mat-icon-button routerLink="/account/login">
         <mat-icon>login</mat-icon>
-      </button>
+      </a>
     </ng-container>
 
     <button

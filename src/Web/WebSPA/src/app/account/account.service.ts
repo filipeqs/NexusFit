@@ -25,7 +25,7 @@ export class AccountService {
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
 
-    return this.http.get<User>(this.baseUrl + '/auth', { headers }).pipe(
+    return this.http.get<User>(this.baseUrl + '/api/auth', { headers }).pipe(
       map((user) => {
         if (user) {
           localStorage.setItem('token', user.token);
@@ -37,19 +37,21 @@ export class AccountService {
 
   login(userLogin: UserLogin) {
     console.log(this.baseUrl);
-    return this.http.post<User>(this.baseUrl + '/auth/login', userLogin).pipe(
-      map((user) => {
-        if (user) {
-          localStorage.setItem('token', user.token);
-          this.currentUserSource.next(user);
-        }
-      })
-    );
+    return this.http
+      .post<User>(this.baseUrl + '/api/auth/login', userLogin)
+      .pipe(
+        map((user) => {
+          if (user) {
+            localStorage.setItem('token', user.token);
+            this.currentUserSource.next(user);
+          }
+        })
+      );
   }
 
   register(userRegister: UserRegister) {
     return this.http
-      .post<User>(this.baseUrl + '/auth/register', userRegister)
+      .post<User>(this.baseUrl + '/api/auth/register', userRegister)
       .pipe(
         map((user) => {
           if (user) {
@@ -66,6 +68,6 @@ export class AccountService {
   }
 
   checkEmailExists(email: string) {
-    return this.http.get(this.baseUrl + '/auth/userexists/' + email);
+    return this.http.get(this.baseUrl + '/api/auth/userexists/' + email);
   }
 }

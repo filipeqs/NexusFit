@@ -10,7 +10,7 @@ spec:
     - host: nexusfit.dev
       http:
         paths:
-          - path: /api/auth
+          - path: /api/auth/?(.*)
             pathType: Prefix
             backend:
               service:

@@ -12,7 +12,19 @@ build:
       context: src/Services/Auth/NexusFit.Auth.API/
       docker:
         dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.cs'
+            dest: .
     - image: filipeqs/nexusfit.angular-ui
       context: src/Web/WebSPA/
       docker:
         dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+          - src: 'src/**/*.html'
+            dest: .
+          - src: 'src/**/*.scss'
+            dest: .

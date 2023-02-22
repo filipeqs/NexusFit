@@ -14,9 +14,6 @@ spec:
       containers:
         - name: angular-ui
           image: filipeqs/nexusfit.angular-ui
-          env:
-            - name: BACKEND_BASE_URL
-              value: api
 ---
 apiVersion: v1
 kind: Service
@@ -29,4 +26,4 @@ spec:
     - name: angular-ui
       protocol: TCP
       port: 4200
-      targetPort: 80
+      targetPort: 4200

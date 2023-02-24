@@ -23,7 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.BuildingBlocks.Ext
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{75795366-6DBD-4674-86BC-EAE31E301118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Auth.FunctionalTests", "Services\Auth\tests\NexusFit.Auth.FunctionalTests\NexusFit.Auth.FunctionalTests.csproj", "{31904197-444D-4947-8E66-882B585D75E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.Auth.FunctionalTests", "Services\Auth\tests\NexusFit.Auth.FunctionalTests\NexusFit.Auth.FunctionalTests.csproj", "{31904197-444D-4947-8E66-882B585D75E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exercises", "Exercises", "{2767CC5D-DA9D-4195-9DD8-112A68A98901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Exercises.API", "Services\Exercises\NexusFit.Exercises.API\NexusFit.Exercises.API.csproj", "{F984438F-5D55-4D1D-AAF3-A6133D162CAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +59,10 @@ Global
 		{31904197-444D-4947-8E66-882B585D75E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31904197-444D-4947-8E66-882B585D75E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31904197-444D-4947-8E66-882B585D75E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,8 @@ Global
 		{11D86A96-98C1-48E7-AE5E-16793AFEAD63} = {92AB62C3-AAA9-4D28-896B-5EE0EE0368A8}
 		{75795366-6DBD-4674-86BC-EAE31E301118} = {C9C2F2A6-1F1F-4CFF-B0EE-9404C1D0E3D0}
 		{31904197-444D-4947-8E66-882B585D75E5} = {75795366-6DBD-4674-86BC-EAE31E301118}
+		{2767CC5D-DA9D-4195-9DD8-112A68A98901} = {8FD0E89E-D714-45BA-B816-293590766768}
+		{F984438F-5D55-4D1D-AAF3-A6133D162CAB} = {2767CC5D-DA9D-4195-9DD8-112A68A98901}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0398A85E-CF94-4BAC-9651-B57C728D6690}

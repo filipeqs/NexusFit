@@ -1,26 +1,26 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-service
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/use-regex: 'true'
+    name: ingress-service
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
-  rules:
-    - host: nexusfit.dev
-      http:
-        paths:
-          - path: /api/auth/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: auth-srv
-                port:
-                  number: 55105
-          - path: /?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: angular-ui-srv
-                port:
-                  number: 4200
+    rules:
+        - host: nexusfit.dev
+          http:
+              paths:
+                  - path: /api/auth/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: auth-srv
+                            port:
+                                number: 55105
+                  - path: /?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: angular-ui-srv
+                            port:
+                                number: 4200

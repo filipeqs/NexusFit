@@ -1,46 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elasticsearch-depl
+    name: elasticsearch-depl
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: elasticsearch
-  template:
-    metadata:
-      labels:
-        app: elasticsearch
-    spec:
-      containers:
-        - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
-          env:
-            - name: xpack.monitoring.enabled
-              value: 'true'
-            - name: xpack.watcher.enabled
-              value: 'true'
-            - name: ES_JAVA_OPTS
-              value: -Xms512m -Xmx512m
-            - name: discovery.type
-              value: single-node
-          ports:
-            - containerPort: 9200
-          volumeMounts:
-            - mountPath: /usr/share/elasticsearch/data
-              name: elasticsearch-data
-      volumes:
-        - name: elasticsearch-data
-          emptyDir: {}
+    replicas: 1
+    selector:
+        matchLabels:
+            app: elasticsearch
+    template:
+        metadata:
+            labels:
+                app: elasticsearch
+        spec:
+            containers:
+                - name: elasticsearch
+                  image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+                  env:
+                      - name: xpack.monitoring.enabled
+                        value: 'true'
+                      - name: xpack.watcher.enabled
+                        value: 'true'
+                      - name: ES_JAVA_OPTS
+                        value: -Xms512m -Xmx512m
+                      - name: discovery.type
+                        value: single-node
+                  ports:
+                      - containerPort: 9200
+                  volumeMounts:
+                      - mountPath: /usr/share/elasticsearch/data
+                        name: elasticsearch-data
+            volumes:
+                - name: elasticsearch-data
+                  emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: elasticsearch
+    name: elasticsearch
 spec:
-  selector:
-    app: elasticsearch
-  ports:
-    - name: 'elasticsearch-9200'
-      port: 9200
-      targetPort: 9200
+    selector:
+        app: elasticsearch
+    ports:
+        - name: 'elasticsearch-9200'
+          port: 9200
+          targetPort: 9200

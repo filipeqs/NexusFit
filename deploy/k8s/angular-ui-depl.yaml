@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: angular-ui-depl
+    name: angular-ui-depl
 spec:
-  selector:
-    matchLabels:
-      app: angular-ui
-  template:
-    metadata:
-      labels:
-        app: angular-ui
-    spec:
-      containers:
-        - name: angular-ui
-          image: filipeqs/nexusfit.angular-ui
+    selector:
+        matchLabels:
+            app: angular-ui
+    template:
+        metadata:
+            labels:
+                app: angular-ui
+        spec:
+            containers:
+                - name: angular-ui
+                  image: filipeqs/nexusfit.angular-ui
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: angular-ui-srv
+    name: angular-ui-srv
 spec:
-  selector:
-    app: angular-ui
-  ports:
-    - name: angular-ui
-      protocol: TCP
-      port: 4200
-      targetPort: 4200
+    selector:
+        app: angular-ui
+    ports:
+        - name: angular-ui
+          protocol: TCP
+          port: 4200
+          targetPort: 4200

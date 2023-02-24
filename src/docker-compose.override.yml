@@ -1,48 +1,49 @@
 version: '3.4'
 
 services:
-  elasticsearch:
-    container_name: elasticsearch
-    environment:
-      - xpack.monitoring.enabled=true
-      - xpack.watcher.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+    elasticsearch:
+        container_name: elasticsearch
+        environment:
+            - xpack.monitoring.enabled=true
+            - xpack.watcher.enabled=false
+            - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+            - discovery.type=single-node
+        ports:
+            - '9200:9200'
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
 
-  authdb:
-    container_name: authdb
-    environment:
-      SA_PASSWORD: "SwN12345678"
-      ACCEPT_EULA: "Y"
-    restart: always
-    ports:
-      - "1433:1433"
+    authdb:
+        container_name: authdb
+        environment:
+            SA_PASSWORD: 'SwN12345678'
+            ACCEPT_EULA: 'Y'
+        restart: always
+        ports:
+            - '1433:1433'
 
-  kibana:
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-    depends_on:
-      - elasticsearch
-    ports:
-      - "5601:5601"
+    kibana:
+        container_name: kibana
+        environment:
+            - ELASTICSEARCH_URL=http://elasticsearch:9200
+        depends_on:
+            - elasticsearch
+        ports:
+            - '5601:5601'
 
-  auth.api:
-    container_name: auth.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:DefaultConnection=Server=authdb;Database=AuthDb;User Id=sa;Password=SwN12345678;"
-      - "ConnectionStrings:LogConnection=http://elasticsearch:9200"
-    ports:
-      - "55105:80"
+    auth.api:
+        container_name: auth.api
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - 'ConnectionStrings:DefaultConnection=Server=authdb;Database=AuthDb;User
+              Id=sa;Password=SwN12345678;'
+            - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
+        ports:
+            - '55105:55105'
 
-  angular-ui:
-    container_name: angular-ui
-    environment:
-      - BACKEND_BASE_URL=http://auth.api
-    ports:
-      - "4200:80"
+    angular-ui:
+        container_name: angular-ui
+        environment:
+            - BACKEND_BASE_URL=http://auth.api
+        ports:
+            - '4200:4200'

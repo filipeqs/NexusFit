@@ -7,6 +7,9 @@ services:
     authdb:
         image: mcr.microsoft.com/mssql/server:2022-latest
 
+    exercisedb:
+        image: mongo
+
     kibana:
         image: docker.elastic.co/kibana/kibana:7.9.2
 

@@ -13,7 +13,7 @@ public class ExerciseRepository : IExerciseRepository
 	{
 		var mongoClient = new MongoClient(databaseSettings.Value.ConnectionString);
 		var mongoDatabase = mongoClient.GetDatabase(databaseSettings.Value.DatabaseName);
-		_exercisesCollection = mongoDatabase.GetCollection<Exercise>("Exercise");
+		_exercisesCollection = mongoDatabase.GetCollection<Exercise>(databaseSettings.Value.CollectionName);
 	}
 
 	public async Task<IReadOnlyList<Exercise>> GetExercisesAsync() => 

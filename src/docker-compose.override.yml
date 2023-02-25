@@ -22,6 +22,12 @@ services:
         ports:
             - '1433:1433'
 
+    exercisedb:
+        container_name: exercisedb
+        restart: always
+        ports:
+            - "27017:27017"
+
     kibana:
         container_name: kibana
         environment:

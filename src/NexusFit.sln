@@ -27,7 +27,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.Auth.FunctionalTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exercises", "Exercises", "{2767CC5D-DA9D-4195-9DD8-112A68A98901}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Exercises.API", "Services\Exercises\NexusFit.Exercises.API\NexusFit.Exercises.API.csproj", "{F984438F-5D55-4D1D-AAF3-A6133D162CAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusFit.Exercises.API", "Services\Exercises\NexusFit.Exercises.API\NexusFit.Exercises.API.csproj", "{F984438F-5D55-4D1D-AAF3-A6133D162CAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{996B6A46-2D7F-4D26-B02B-A9E6BF8E0D8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Exercises.FunctionalTests", "Services\Exercises\tests\NexusFit.Exercises.FunctionalTests\NexusFit.Exercises.FunctionalTests.csproj", "{379D9B94-7CDF-498B-835E-7C5A6932F3A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusFit.Exercises.IntegrationTests", "Services\Exercises\tests\NexusFit.Exercises.IntegrationTests\NexusFit.Exercises.IntegrationTests.csproj", "{8CAB786C-05E1-42BC-80A7-6E7787A8D62A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +69,14 @@ Global
 		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F984438F-5D55-4D1D-AAF3-A6133D162CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{379D9B94-7CDF-498B-835E-7C5A6932F3A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{379D9B94-7CDF-498B-835E-7C5A6932F3A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{379D9B94-7CDF-498B-835E-7C5A6932F3A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{379D9B94-7CDF-498B-835E-7C5A6932F3A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CAB786C-05E1-42BC-80A7-6E7787A8D62A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CAB786C-05E1-42BC-80A7-6E7787A8D62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CAB786C-05E1-42BC-80A7-6E7787A8D62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CAB786C-05E1-42BC-80A7-6E7787A8D62A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +93,9 @@ Global
 		{31904197-444D-4947-8E66-882B585D75E5} = {75795366-6DBD-4674-86BC-EAE31E301118}
 		{2767CC5D-DA9D-4195-9DD8-112A68A98901} = {8FD0E89E-D714-45BA-B816-293590766768}
 		{F984438F-5D55-4D1D-AAF3-A6133D162CAB} = {2767CC5D-DA9D-4195-9DD8-112A68A98901}
+		{996B6A46-2D7F-4D26-B02B-A9E6BF8E0D8E} = {2767CC5D-DA9D-4195-9DD8-112A68A98901}
+		{379D9B94-7CDF-498B-835E-7C5A6932F3A7} = {996B6A46-2D7F-4D26-B02B-A9E6BF8E0D8E}
+		{8CAB786C-05E1-42BC-80A7-6E7787A8D62A} = {996B6A46-2D7F-4D26-B02B-A9E6BF8E0D8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0398A85E-CF94-4BAC-9651-B57C728D6690}

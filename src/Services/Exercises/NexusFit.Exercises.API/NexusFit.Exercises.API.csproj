@@ -11,6 +11,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="NexusFit.BuildingBlocks.ExceptionHandling" Version="1.0.0" />
     <PackageReference Include="NexusFit.BuildingBlocks.Logging" Version="1.1.1" />

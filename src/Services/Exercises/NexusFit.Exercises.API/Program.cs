@@ -1,9 +1,8 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
-using NexusFit.BuildingBlocks.ExceptionHandling.Models;
 using NexusFit.BuildingBlocks.Logging.Middleware;
 using NexusFit.Exercises.API.Helpers;
 using NexusFit.Exercises.API.Repository;
@@ -26,7 +25,15 @@ builder.Services.AddHealthChecks()
     .AddElasticsearch(
         builder.Configuration.GetConnectionString("LogConnection"),
         name: "logdb-check",
-        tags: new string[] { "logdb", "elasticsearch" });;
+        tags: new string[] { "logdb", "elasticsearch" });
+
+builder.Services.AddAuthentication("Bearer")
+    .AddIdentityServerAuthentication("Bearer", options =>
+    {
+        options.ApiName = builder.Configuration.GetValue<string>("IdentityServer:Resource");;
+        options.Authority = builder.Configuration.GetValue<string>("IdentityServer:Url");
+        options.RequireHttpsMetadata = false;
+    });
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
@@ -34,33 +41,14 @@ builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.Configure<ApiBehaviorOptions>(options =>
+builder.Services.AddExceptionHandlingServices();
+
+builder.Services.AddCors(p => p.AddPolicy("clientapp", builder =>
 {
-    options.InvalidModelStateResponseFactory = actionContext =>
-    {
-        var errors = actionContext.ModelState
-            .Where(e => e.Value.Errors.Count > 0)
-            .SelectMany(q => q.Value.Errors)
-            .Select(q => q.ErrorMessage).ToArray();
-
-        var errorResponse = new ApiValidationErrorResponse
-        {
-            Errors = errors
-        };
-
-        return new BadRequestObjectResult(errorResponse);
-    };
-});
+    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+}));
 
 var app = builder.Build();
-
-app.MapHealthChecks("/api/exercise/hc", new HealthCheckOptions()
-{
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseMiddleware<RequestLoggingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -69,6 +57,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHealthChecks("/api/exercises/hc", new HealthCheckOptions()
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+app.UseCors("clientapp");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

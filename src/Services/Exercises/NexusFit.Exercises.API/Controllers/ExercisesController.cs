@@ -5,17 +5,18 @@ using NexusFit.Exercises.API.Dtos;
 using AutoMapper;
 using NexusFit.BuildingBlocks.ExceptionHandling.Models;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NexusFit.Exercises.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExerciseController : ControllerBase
+public class ExercisesController : ControllerBase
 {
     private readonly IExerciseRepository _repository;
     private readonly IMapper _mapper;
 
-    public ExerciseController(IExerciseRepository repo, IMapper mapper)
+    public ExercisesController(IExerciseRepository repo, IMapper mapper)
     {
         _repository = repo;
         _mapper = mapper;
@@ -49,6 +50,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateExercise(ExerciseCreateDto exerciseCreateDto) 
@@ -63,6 +65,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
@@ -82,6 +85,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteExercise(string id)

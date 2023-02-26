@@ -3,6 +3,8 @@ using NexusFit.Exercises.API.Repository;
 using NexusFit.Exercises.API.Entities;
 using NexusFit.Exercises.API.Dtos;
 using AutoMapper;
+using NexusFit.BuildingBlocks.ExceptionHandling.Models;
+using System.Net;
 
 namespace NexusFit.Exercises.API.Controllers;
 
@@ -20,6 +22,7 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IReadOnlyList<ExerciseDetailsDto>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<IReadOnlyList<Exercise>>> GetExercises()
     {
         var exercises = await _repository.GetExercisesAsync();
@@ -30,12 +33,15 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ExerciseDetailsDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ExerciseDetailsDto>> GetExerciseById(string id)
     {
         var exercise = await _repository.GetExerciseAsync(id);
 
         if (exercise is null)
-            return NotFound();
+            return NotFound(new ApiResponse((int)HttpStatusCode.NotFound, 
+            $"Failed to find exercise with id ${id}"));
 
         var exerciseDetails = _mapper.Map<ExerciseDetailsDto>(exercise);
 
@@ -43,6 +49,8 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateExercise(ExerciseCreateDto exerciseCreateDto) 
     {
         var exercise = _mapper.Map<Exercise>(exerciseCreateDto);
@@ -54,13 +62,17 @@ public class ExerciseController : ControllerBase
         return CreatedAtAction(nameof(GetExerciseById), new { id = exerciseDetails.Id }, exerciseDetails);
     }
 
-    [HttpPut()]
+    [HttpPut]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateExercise(ExerciseUpdateDto updatedExercise) 
     {
         var exercise = await _repository.GetExerciseAsync(updatedExercise.Id);
 
         if (exercise is null)
-            return NotFound();
+            return NotFound(new ApiResponse((int)HttpStatusCode.NotFound, 
+            $"Failed to find exercise with id ${updatedExercise.Id}"));
 
         exercise = _mapper.Map<Exercise>(updatedExercise);
 
@@ -70,12 +82,15 @@ public class ExerciseController : ControllerBase
     }
 
     [HttpDelete]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteExercise(string id)
     {
         var exercise = await _repository.GetExerciseAsync(id);
 
         if (exercise is null)
-            return NotFound();
+            return NotFound(new ApiResponse((int)HttpStatusCode.NotFound, 
+            $"Failed to find exercise with id ${id}"));
 
         await _repository.RemoveExerciseAsync(id);
 

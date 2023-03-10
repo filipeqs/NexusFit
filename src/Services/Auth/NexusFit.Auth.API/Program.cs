@@ -1,12 +1,13 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.API.Extensions;
-using NexusFit.Auth.API.Helpers;
+using NexusFit.Auth.API.services;
 using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
 using NexusFit.BuildingBlocks.Extensions;
@@ -38,19 +39,14 @@ builder.Services.AddHealthChecks()
         name: "logdb-check",
         tags: new string[] { "logdb", "elasticsearch" });
 
-builder.Services.AddIdentityServices(
-    builder.Configuration,
-    builder.Environment);
+builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddAuthentication("Bearer")
-.AddIdentityServerAuthentication("Bearer", options =>
+builder.Services.AddDbContext<IdentityContext>(options => 
 {
-    options.Authority = builder.Configuration.GetValue<string>("IdentityServer:Url");
-    options.RequireHttpsMetadata = false;
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.Configure<IdentityServerSettings>(options =>
-    builder.Configuration.GetSection("IdentityServer").Bind(options));
+builder.Services.AddIdentityServices(
+    builder.Configuration);
 
 builder.Services.AddExceptionHandlingServices();
 
@@ -89,7 +85,6 @@ app.MigrateDbContext<IdentityContext>((context, services) =>
 
 app.UseCors("clientapp");
 app.UseAuthentication();
-app.UseIdentityServer();
 app.UseAuthorization();
 
 app.MapControllers();

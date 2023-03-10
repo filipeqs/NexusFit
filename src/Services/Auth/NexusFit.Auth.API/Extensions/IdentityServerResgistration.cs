@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
 
@@ -8,37 +10,34 @@ namespace NexusFit.Auth.API.Extensions;
 public static class IdentityServerResgistration
 {
     public static IServiceCollection AddIdentityServices(
-        this IServiceCollection services, IConfiguration configuration,
-        IWebHostEnvironment environment)
+        this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<IdentityContext>(options =>
-        {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-        });
-
-        services
-            .AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<IdentityContext>()
+            services.AddIdentityCore<ApplicationUser>(opt => 
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireDigit = false;
+            })
+            .AddRoles<ApplicationRole>()
+            .AddRoleManager<RoleManager<ApplicationRole>>()
             .AddSignInManager<SignInManager<ApplicationUser>>()
-            .AddDefaultTokenProviders();
+            .AddRoleValidator<RoleValidator<ApplicationRole>>()
+            .AddEntityFrameworkStores<IdentityContext>();
 
-        var identityServer = services.AddIdentityServer(options =>
-        {
-            options.Events.RaiseErrorEvents = true;
-            options.Events.RaiseInformationEvents = true;
-            options.Events.RaiseFailureEvents = true;
-            options.Events.RaiseSuccessEvents = true;
-
-            // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
-            options.EmitStaticAudienceClaim = true;
-        })
-            .AddInMemoryIdentityResources(IdentityConfiguration.IdentityResources)
-            .AddInMemoryApiResources(IdentityConfiguration.ApiResources)
-            .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
-            .AddInMemoryClients(IdentityConfiguration.Clients)
-            .AddAspNetIdentity<ApplicationUser>();
-
-        identityServer.AddDeveloperSigningCredential();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            services.AddAuthorization(opt => 
+            {
+                opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+            });
 
         return services;
     }

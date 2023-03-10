@@ -1,13 +1,10 @@
-﻿using IdentityModel;
-using IdentityServer4;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NexusFit.Auth.API.Dtos;
 using NexusFit.Auth.API.Entities;
-using NexusFit.Auth.API.Helpers;
+using NexusFit.Auth.API.services;
 using NexusFit.BuildingBlocks.ExceptionHandling.Models;
 using System.Net;
 using System.Security.Claims;
@@ -21,37 +18,32 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     public readonly SignInManager<ApplicationUser> _signInManager;
     private ILogger<AuthController> _logger;
-    private readonly IdentityServerSettings _identityServerSettings;
-    private readonly IdentityServerTools _identityServerTools;
+    private readonly ITokenService _tokenService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         ILogger<AuthController> logger,
-        IOptions<IdentityServerSettings> identityServerOptions,
-        IdentityServerTools identityServerTools)
+        ITokenService tokenService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
-        _identityServerSettings = identityServerOptions.Value;
-        _identityServerTools = identityServerTools;
+        _tokenService = tokenService;
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
-        var email = User.Claims.FirstOrDefault(q => q.Type == "email")?.Value;
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email)?.Value;
 
         var user = await _userManager.Users
             .SingleOrDefaultAsync(q => q.Email == email);
-        var claims = await _userManager.GetClaimsAsync(user);
-        var token = await GetToken(claims.ToList());
 
         return new UserDto
         {
-            Token = token,
+            Token = await _tokenService.CreateToken(user),
             Email = user.Email
         };
     }
@@ -60,20 +52,18 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
-        if (user == null)
-            return BadRequest(new ApiResponse((int)HttpStatusCode.Unauthorized,
+        if (user is null)
+            return Unauthorized(new ApiResponse((int)HttpStatusCode.Unauthorized,
                 "Invalid credentials."));
 
-        if (await _userManager.CheckPasswordAsync(user, loginDto.Password) == false)
-            return BadRequest(new ApiResponse((int)HttpStatusCode.Unauthorized,
+        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        if (result.Succeeded is false)
+            return Unauthorized(new ApiResponse((int)HttpStatusCode.Unauthorized,
                 "Invalid credentials."));
-
-        var claims = await _userManager.GetClaimsAsync(user);
-        var token = await GetToken(claims.ToList());
 
         return new UserDto
         {
-            Token = token,
+            Token = await _tokenService.CreateToken(user),
             Email = user.Email
         };
     }
@@ -100,26 +90,17 @@ public class AuthController : ControllerBase
                 "Failed to create user, please contact support."));
         }
 
-        var claims = new List<Claim>()
+        var roleResult = await _userManager.AddToRoleAsync(user, "Student");
+        if (roleResult.Succeeded is false)
         {
-            new Claim(JwtClaimTypes.Email, registerDto.Email),
-            new Claim(JwtClaimTypes.Role, "Student"),
-            new Claim(JwtClaimTypes.Role, "Admin")
-        };
-
-        result = await _userManager.AddClaimsAsync(user, claims);
-        if (!result.Succeeded)
-        {
-            _logger.LogInformation("Failed to add claims to User", result.Errors);
+            _logger.LogInformation("Failed to add role", result.Errors);
             return BadRequest(new ApiResponse((int)HttpStatusCode.BadRequest,
                 "Failed to create user, please contact support."));
         }
 
-        var token = await GetToken(claims);
-
         return new UserDto
         {
-            Token = token,
+            Token = await _tokenService.CreateToken(user),
             Email = user.Email
         };
     }
@@ -128,19 +109,5 @@ public class AuthController : ControllerBase
     public async Task<bool> UserExists(string email)
     {
         return await _userManager.FindByEmailAsync(email) != null;
-    }
-
-    private async Task<string> GetToken(List<Claim> claims)
-    {
-        var scopes = _identityServerSettings.Scope.Split(' ');
-
-        var token = await _identityServerTools.IssueClientJwtAsync(
-            _identityServerSettings.ClientId,
-            30000,
-            scopes: scopes,
-            additionalClaims: claims
-        );
-
-        return token;
     }
 }

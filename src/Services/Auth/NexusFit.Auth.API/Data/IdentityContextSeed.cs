@@ -1,7 +1,5 @@
-﻿using IdentityModel;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using NexusFit.Auth.API.Entities;
-using System.Security.Claims;
 
 namespace NexusFit.Auth.API.Data
 {
@@ -14,22 +12,16 @@ namespace NexusFit.Auth.API.Data
         {
             if (env.IsDevelopment())
             {
-                if (await userManager.FindByEmailAsync("filipe.silva@email.com") == null)
+                if (await userManager.FindByEmailAsync("admin.user@email.com") == null)
                 {
                     var user = new ApplicationUser
                     {
-                        Email = "filipe.silva@email.com",
-                        UserName = "filipe.silva@email.com"
+                        Email = "admin.user@email.com",
+                        UserName = "admin.user@email.com"
                     };
 
                     await userManager.CreateAsync(user, "P@ssw0rd");
-
-                    await userManager.AddClaimsAsync(user, new List<Claim>()
-                    {
-                        new Claim(JwtClaimTypes.Email, user.Email),
-                        new Claim(JwtClaimTypes.Role, "Student"),
-                        new Claim(JwtClaimTypes.Role, "Admin")
-                    });
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
         }

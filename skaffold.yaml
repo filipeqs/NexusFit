@@ -16,6 +16,14 @@ build:
               manual:
                   - src: '**/*.cs'
                     dest: .
+        - image: filipeqs/nexusfit.exercises.api
+          context: src/Services/Exercises/NexusFit.Exercises.API/
+          docker:
+              dockerfile: Dockerfile.dev
+          sync:
+              manual:
+                  - src: '**/*.cs'
+                    dest: .
         - image: filipeqs/nexusfit.angular-ui
           context: src/Web/WebSPA/
           docker:

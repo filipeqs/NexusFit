@@ -17,6 +17,13 @@ spec:
                             name: auth-srv
                             port:
                                 number: 55105
+                  - path: /api/exercises/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: exercises-srv
+                            port:
+                                number: 5001
                   - path: /?(.*)
                     pathType: Prefix
                     backend:

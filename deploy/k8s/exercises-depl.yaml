@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: exercises-depl
+spec:
+    selector:
+        matchLabels:
+            app: exercises
+    template:
+        metadata:
+            labels:
+                app: exercises
+        spec:
+            containers:
+                - name: exercises
+                  image: filipeqs/nexusfit.exercises.api
+                  env:
+                      - name: ASPNETCORE_ENVIRONMENT
+                        value: Development
+                      - name: DatabaseSettings__ConnectionString
+                        valueFrom:
+                            configMapKeyRef:
+                                name: exercisesdb-configmap
+                                key: connection_string
+                      - name: IdentityServer__Url
+                        value: http://auth-srv:55105
+                      - name: ConnectionStrings__LogConnection
+                        valueFrom:
+                            configMapKeyRef:
+                                name: elasticsearch-configmap
+                                key: connection_string
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: exercises-srv
+spec:
+    selector:
+        app: exercises
+    ports:
+        - port: 5001
+          targetPort: 5001

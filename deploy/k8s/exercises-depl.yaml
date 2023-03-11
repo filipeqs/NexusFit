@@ -22,13 +22,16 @@ spec:
                             configMapKeyRef:
                                 name: exercisesdb-configmap
                                 key: connection_string
-                      - name: IdentityServer__Url
-                        value: http://auth-srv:55105
                       - name: ConnectionStrings__LogConnection
                         valueFrom:
                             configMapKeyRef:
                                 name: elasticsearch-configmap
                                 key: connection_string
+                      - name: TokenKey
+                        valueFrom:
+                            secretKeyRef:
+                                name: authapi
+                                key: tokenkey
 ---
 apiVersion: v1
 kind: Service

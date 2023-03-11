@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,17 +20,20 @@ public class AuthController : ControllerBase
     public readonly SignInManager<ApplicationUser> _signInManager;
     private ILogger<AuthController> _logger;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         ILogger<AuthController> logger,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -76,11 +80,7 @@ public class AuthController : ControllerBase
             return BadRequest(new ApiResponse((int)HttpStatusCode.BadRequest,
                 "Email address already exists."));
 
-        var user = new ApplicationUser
-        {
-            Email = registerDto.Email,
-            UserName = registerDto.Email
-        };
+        var user = _mapper.Map<ApplicationUser>(registerDto);
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded)

@@ -18,6 +18,12 @@ services:
         build:
             context: Services/Auth/NexusFit.Auth.API
             dockerfile: Dockerfile.dev
+    
+    exercises.api:
+        image: ${DOCKER_REGISTRY-}nexusfitexercisesapi
+        build:
+            context: Services/Exercises/NexusFit.Exercises.API
+            dockerfile: Dockerfile.dev
 
     angular-ui:
         image: ${DOCKER_REGISTRY-}nexusfit-ui

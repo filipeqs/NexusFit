@@ -50,7 +50,7 @@ public class ExercisesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateExercise(ExerciseCreateDto exerciseCreateDto) 
@@ -65,7 +65,7 @@ public class ExercisesController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ApiValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
@@ -85,7 +85,7 @@ public class ExercisesController : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteExercise(string id)

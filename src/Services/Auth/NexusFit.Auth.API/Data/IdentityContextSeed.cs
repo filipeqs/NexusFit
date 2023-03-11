@@ -7,9 +7,18 @@ namespace NexusFit.Auth.API.Data
     {
         public async Task SeedAsync(
             SignInManager<ApplicationUser> signInManager, 
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager,
             IHostEnvironment env)
         {
+            var roles = new List<string>{ "Admin", "Student" };
+            foreach (var roleName in roles)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                    await roleManager.CreateAsync(new ApplicationRole(roleName));
+            }
+
             if (env.IsDevelopment())
             {
                 if (await userManager.FindByEmailAsync("admin.user@email.com") == null)

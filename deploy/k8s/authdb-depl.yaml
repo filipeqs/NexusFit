@@ -23,6 +23,11 @@ spec:
                                 key: SA_PASSWORD
                       - name: ACCEPT_EULA
                         value: 'Y'
+                      - name: TokenKey
+                        valueFrom:
+                            secretKeyRef:
+                                name: authapi
+                                key: tokenkey
 ---
 apiVersion: v1
 kind: Service

@@ -44,8 +44,19 @@ services:
             - 'ConnectionStrings:DefaultConnection=Server=authdb;Database=AuthDb;User
               Id=sa;Password=SwN12345678;'
             - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
+            - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
         ports:
             - '55105:55105'
+
+    exercises.api:
+        container_name: exercises.api
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
+            - 'DatabaseSettings:ConnectionString=mongodb://exercisedb:27017'
+            - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
+        ports:
+            - '5001:5001'
 
     angular-ui:
         container_name: angular-ui

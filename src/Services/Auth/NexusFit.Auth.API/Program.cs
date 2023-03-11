@@ -39,6 +39,8 @@ builder.Services.AddHealthChecks()
         name: "logdb-check",
         tags: new string[] { "logdb", "elasticsearch" });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddDbContext<IdentityContext>(options => 
@@ -77,9 +79,10 @@ app.MigrateDbContext<IdentityContext>((context, services) =>
     var env = services.GetService<IHostEnvironment>();
     var signInManager = services.GetRequiredService<SignInManager<ApplicationUser>>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
     new IdentityContextSeed()
-        .SeedAsync(signInManager, userManager, env)
+        .SeedAsync(signInManager, userManager, roleManager, env)
         .Wait();
 });
 

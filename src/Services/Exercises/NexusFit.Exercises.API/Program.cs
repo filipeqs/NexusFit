@@ -1,6 +1,9 @@
+using System.Text;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
 using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
 using NexusFit.BuildingBlocks.Logging.Middleware;
@@ -27,13 +30,22 @@ builder.Services.AddHealthChecks()
         name: "logdb-check",
         tags: new string[] { "logdb", "elasticsearch" });
 
-builder.Services.AddAuthentication("Bearer")
-    .AddIdentityServerAuthentication("Bearer", options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => 
     {
-        options.ApiName = builder.Configuration.GetValue<string>("IdentityServer:Resource");;
-        options.Authority = builder.Configuration.GetValue<string>("IdentityServer:Url");
-        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
+
+builder.Services.AddAuthorization(opt => 
+{
+    opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+});
 
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));

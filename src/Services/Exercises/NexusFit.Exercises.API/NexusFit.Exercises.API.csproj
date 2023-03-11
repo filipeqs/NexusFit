@@ -13,8 +13,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
-    <PackageReference Include="NexusFit.BuildingBlocks.ExceptionHandling" Version="1.0.0" />
-    <PackageReference Include="NexusFit.BuildingBlocks.Logging" Version="1.1.1" />
+    <PackageReference Include="NexusFit.BuildingBlocks.Common" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 

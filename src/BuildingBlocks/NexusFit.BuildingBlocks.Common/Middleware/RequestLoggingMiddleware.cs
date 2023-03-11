@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace NexusFit.BuildingBlocks.Logging.Middleware;
+namespace NexusFit.BuildingBlocks.Common.Middleware;
 
 public class RequestLoggingMiddleware
 {

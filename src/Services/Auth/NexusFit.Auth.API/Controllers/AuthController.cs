@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using NexusFit.Auth.API.Dtos;
 using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.API.services;
-using NexusFit.BuildingBlocks.ExceptionHandling.Models;
+using NexusFit.BuildingBlocks.Common.Models;
 using System.Net;
 using System.Security.Claims;
 

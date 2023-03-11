@@ -8,11 +8,9 @@ using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.API.Extensions;
 using NexusFit.Auth.API.services;
-using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
-using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
-using NexusFit.BuildingBlocks.Extensions;
-using NexusFit.BuildingBlocks.Logging;
-using NexusFit.BuildingBlocks.Logging.Middleware;
+using NexusFit.BuildingBlocks.Common.Extensions;
+using NexusFit.BuildingBlocks.Common.Logging;
+using NexusFit.BuildingBlocks.Common.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

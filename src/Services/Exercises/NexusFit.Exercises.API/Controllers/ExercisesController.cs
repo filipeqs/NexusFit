@@ -3,9 +3,9 @@ using NexusFit.Exercises.API.Repository;
 using NexusFit.Exercises.API.Entities;
 using NexusFit.Exercises.API.Dtos;
 using AutoMapper;
-using NexusFit.BuildingBlocks.ExceptionHandling.Models;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using NexusFit.BuildingBlocks.Common.Models;
 
 namespace NexusFit.Exercises.API.Controllers;
 

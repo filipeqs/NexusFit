@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
-using NexusFit.BuildingBlocks.ExceptionHandling.Extensions;
-using NexusFit.BuildingBlocks.ExceptionHandling.Middleware;
-using NexusFit.BuildingBlocks.Logging.Middleware;
+using NexusFit.BuildingBlocks.Common.Extensions;
+using NexusFit.BuildingBlocks.Common.Middleware;
 using NexusFit.Exercises.API.Helpers;
 using NexusFit.Exercises.API.Repository;
 

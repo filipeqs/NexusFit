@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
-namespace NexusFit.BuildingBlocks.Logging;
+namespace NexusFit.BuildingBlocks.Common.Logging;
 
 public static class SeriLogger
 {

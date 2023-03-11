@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using NexusFit.BuildingBlocks.ExceptionHandling.Models;
+using NexusFit.BuildingBlocks.Common.Models;
 
-namespace NexusFit.BuildingBlocks.ExceptionHandling.Extensions
+namespace NexusFit.BuildingBlocks.Common.Extensions
 {
     public static class ExceptionHandlingServicesExtensions
     {

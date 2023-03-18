@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
     name: authdb-configmap
 data:
-    connection_string: Server=authdb-srv;Database=AuthDb;User Id=sa;Password=SwN12345678
+    connection_string:
+        Server=authdb-srv;Database=AuthDb;User Id=sa;Password=SwN12345678;
+        TrustServerCertificate=true

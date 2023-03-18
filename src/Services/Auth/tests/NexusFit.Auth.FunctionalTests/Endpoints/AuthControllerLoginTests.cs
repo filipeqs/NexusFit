@@ -25,8 +25,6 @@ public class AuthControllerLoginTests : IAsyncLifetime
         {
             Email = "test@email.com",
             Password = "P@ssw0rd",
-            FirstName = "Test",
-            LastName = "Test",
         };
 
         var registerRequest = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
@@ -38,13 +36,13 @@ public class AuthControllerLoginTests : IAsyncLifetime
     [Fact]
     public async Task Login_ShouldReturn_Token()
     {
-        var registerDto = new LoginDto
+        var loginDto = new LoginDto
         {
             Email = "test@email.com",
             Password = "P@ssw0rd",
         };
 
-        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var request = new StringContent(JsonSerializer.Serialize(loginDto), Encoding.UTF8, "application/json");
         var response = await _client.PostAsync(AuthRoutes.Post.Login, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -53,36 +51,36 @@ public class AuthControllerLoginTests : IAsyncLifetime
         var user = JsonSerializer.Deserialize<UserDto>(content, options);
 
         user.Should().NotBeNull();
-        user.Token.Should().NotBeNullOrWhiteSpace();
+        user?.Token.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
-    public async Task LoginWrondPassword_ShouldReturn_BadRequest()
+    public async Task LoginWrongPassword_ShouldReturn_Unauthorized()
     {
-        var registerDto = new LoginDto
+        var loginDto = new LoginDto
         {
             Email = "test@email.com",
             Password = "password",
         };
 
-        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var request = new StringContent(JsonSerializer.Serialize(loginDto), Encoding.UTF8, "application/json");
         var response = await _client.PostAsync(AuthRoutes.Post.Login, request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
-    public async Task LoginUnexisting_ShouldReturn_BadRequest()
+    public async Task LoginUnexisting_ShouldReturn_Unauthorized()
     {
-        var registerDto = new LoginDto
+        var loginDto = new LoginDto
         {
             Email = "unexting@email.com",
             Password = "P@ssw0rd",
         };
 
-        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var request = new StringContent(JsonSerializer.Serialize(loginDto), Encoding.UTF8, "application/json");
         var response = await _client.PostAsync(AuthRoutes.Post.Login, request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }

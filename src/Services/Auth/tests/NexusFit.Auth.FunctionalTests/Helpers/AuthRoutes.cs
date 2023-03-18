@@ -4,7 +4,7 @@
     {
         public static class Get
         {
-            public static string UserExists(string email) => $"api/auth/{email}";
+            public static string UserExists(string email) => $"api/auth/userexists/{email}";
         }
 
         public static class Post

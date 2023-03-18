@@ -19,31 +19,8 @@ public class AuthControllerRegisterTests : IAsyncLifetime
         _resetDatabase = apiFactory.ResetDatabaseAsync;
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public async Task InitializeAsync() => await Task.CompletedTask;
     public async Task DisposeAsync() => await _resetDatabase();
-
-    [Fact]
-    public async Task RegisterUser_ShouldReturn_Token()
-    {
-        var registerDto = new RegisterDto
-        {
-            Email = "test@email.com",
-            Password = "P@ssw0rd",
-            FirstName = "Test",
-            LastName = "Test",
-        };
-
-        var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync(AuthRoutes.Post.Register, request);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var content = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-        var user = JsonSerializer.Deserialize<UserDto>(content, options);
-
-        user.Should().NotBeNull();
-        user.Token.Should().NotBeNullOrWhiteSpace();
-    }
 
     [Fact]
     public async Task RegisterExistingUser_ShouldReturn_BadRequest()
@@ -52,8 +29,6 @@ public class AuthControllerRegisterTests : IAsyncLifetime
         {
             Email = "test@email.com",
             Password = "P@ssw0rd",
-            FirstName = "Test",
-            LastName = "Test",
         };
 
         var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
@@ -70,8 +45,6 @@ public class AuthControllerRegisterTests : IAsyncLifetime
         {
             Email = "test@",
             Password = "P@ssw0rd",
-            FirstName = "Test",
-            LastName = "Test",
         };
 
         var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
@@ -87,13 +60,32 @@ public class AuthControllerRegisterTests : IAsyncLifetime
         {
             Email = "test@email.com",
             Password = "password",
-            FirstName = "Test",
-            LastName = "Test",
         };
 
         var request = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
         var response = await _client.PostAsync(AuthRoutes.Post.Register, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task RegisterUser_ShouldReturn_Token()
+    {
+        var registerDto = new RegisterDto
+        {
+            Email = "test@email.com",
+            Password = "P@ssw0rd",
+        };
+
+        var registerRequest = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync(AuthRoutes.Post.Register, registerRequest);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var content = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        var user = JsonSerializer.Deserialize<UserDto>(content, options);
+
+        user.Should().NotBeNull();
+        user?.Token.Should().NotBeNullOrWhiteSpace();
     }
 }

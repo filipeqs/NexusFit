@@ -26,8 +26,6 @@ public class AuthControllerUserExistsTests : IAsyncLifetime
         {
             Email = "test@email.com",
             Password = "P@ssw0rd",
-            FirstName = "Test",
-            LastName = "Test",
         };
 
         var registerRequest = new StringContent(JsonSerializer.Serialize(registerDto), Encoding.UTF8, "application/json");

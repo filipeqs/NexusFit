@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NexusFit.Auth.API;
 using NexusFit.Auth.API.Data;
-using NexusFit.Auth.API.Helpers;
 using Respawn;
 using System.Data.Common;
 using System.Reflection;
@@ -59,9 +58,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
                 });
 
                 services.AddSingleton<IConfiguration>(configuration);
-
-                services.Configure<IdentityServerSettings>(options => 
-                    configuration.GetSection("IdentityServer").Bind(options));
             });
 
         base.ConfigureWebHost(builder);

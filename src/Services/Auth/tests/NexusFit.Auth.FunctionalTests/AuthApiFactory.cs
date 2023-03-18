@@ -2,6 +2,7 @@
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.SqlClient;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NexusFit.Auth.API;
 using NexusFit.Auth.API.Data;
+using NexusFit.Auth.API.Entities;
 using Respawn;
 using System.Data.Common;
 using System.Reflection;
@@ -19,7 +21,9 @@ namespace NexusFit.Auth.FunctionalTests;
 
 public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    public HttpClient HttpClient { get; private set; }
+    public HttpClient HttpClient { get; private set; } = default!;
+
+    private ServiceProvider _serviceProvider = default!;
     private Respawner _respawner = default!;
     private DbConnection _dbConnection = default!;
     private readonly TestcontainerDatabase _dbContainer =
@@ -57,11 +61,25 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
                     options.UseSqlServer($"{_dbContainer.ConnectionString}TrustServerCertificate=true;");
                 });
 
-                services.AddSingleton<IConfiguration>(configuration);
+                _serviceProvider = services.BuildServiceProvider();
             });
 
         base.ConfigureWebHost(builder);
     }
+
+    public async Task UpdateApplicationRoles()
+    {
+        var roleManager = _serviceProvider.GetService<RoleManager<ApplicationRole>>()!;
+
+        var roles = new List<string> { "Admin", "Student" };
+        foreach (var roleName in roles)
+        {
+            var roleExist = await roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+                await roleManager.CreateAsync(new ApplicationRole(roleName));
+        }
+    }
+
 
     public async Task ResetDatabaseAsync()
     {

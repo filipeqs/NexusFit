@@ -12,15 +12,19 @@ public class AuthControllerLoginTests : IAsyncLifetime
 {
     private readonly HttpClient _client;
     private readonly Func<Task> _resetDatabase;
+    private readonly Func<Task> _updateApplicationRoles;
 
     public AuthControllerLoginTests(AuthApiFactory apiFactory)
     {
         _client = apiFactory.HttpClient;
         _resetDatabase = apiFactory.ResetDatabaseAsync;
+        _updateApplicationRoles = apiFactory.UpdateApplicationRoles;
     }
 
     public async Task InitializeAsync()
     {
+        await _updateApplicationRoles();
+
         var registerDto = new RegisterDto
         {
             Email = "test@email.com",

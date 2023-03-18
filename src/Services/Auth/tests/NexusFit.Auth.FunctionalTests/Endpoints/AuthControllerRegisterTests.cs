@@ -1,5 +1,8 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using NexusFit.Auth.API.Dtos;
+using NexusFit.Auth.API.Entities;
 using NexusFit.Auth.FunctionalTests.Helpers;
 using System.Net;
 using System.Text;
@@ -12,14 +15,20 @@ public class AuthControllerRegisterTests : IAsyncLifetime
 {
     private readonly HttpClient _client;
     private readonly Func<Task> _resetDatabase;
+    private readonly Func<Task> _updateApplicationRoles;
 
     public AuthControllerRegisterTests(AuthApiFactory apiFactory)
     {
         _client = apiFactory.HttpClient;
         _resetDatabase = apiFactory.ResetDatabaseAsync;
+        _updateApplicationRoles = apiFactory.UpdateApplicationRoles;
     }
 
-    public async Task InitializeAsync() => await Task.CompletedTask;
+    public async Task InitializeAsync()
+    {
+        await _updateApplicationRoles();
+    }
+
     public async Task DisposeAsync() => await _resetDatabase();
 
     [Fact]

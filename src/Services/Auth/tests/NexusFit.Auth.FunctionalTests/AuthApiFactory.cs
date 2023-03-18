@@ -16,6 +16,7 @@ using NexusFit.Auth.API.Entities;
 using Respawn;
 using System.Data.Common;
 using System.Reflection;
+using Testcontainers.MsSql;
 
 namespace NexusFit.Auth.FunctionalTests;
 
@@ -26,15 +27,19 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     private ServiceProvider _serviceProvider = default!;
     private Respawner _respawner = default!;
     private DbConnection _dbConnection = default!;
-    private readonly TestcontainerDatabase _dbContainer =
-        new TestcontainersBuilder<MsSqlTestcontainer>()
-            .WithDatabase(new MsSqlTestcontainerConfiguration()
-            {
-                Password = "localdevpassword#123",
-            })
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithCleanUp(true)
-            .Build();
+    private readonly MsSqlContainer _msSqlContainer =
+        new MsSqlBuilder()
+        .WithCleanUp(true)
+        .Build();
+    //private readonly TestcontainerDatabase _dbContainer =
+    //    new TestcontainersBuilder<MsSqlTestcontainer>()
+    //        .WithDatabase(new MsSqlTestcontainerConfiguration()
+    //        {
+    //            Password = "localdevpassword#123",
+    //        })
+    //        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+    //        .WithCleanUp(true)
+    //        .Build();
 
     private readonly IContainer _elasticSearchContainer =
         new ContainerBuilder()
@@ -58,7 +63,7 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
                 services.RemoveAll(typeof(DbContextOptions<IdentityContext>));
                 services.AddDbContext<IdentityContext>(options =>
                 {
-                    options.UseSqlServer($"{_dbContainer.ConnectionString}TrustServerCertificate=true;");
+                    options.UseSqlServer(_msSqlContainer.GetConnectionString());
                 });
 
                 _serviceProvider = services.BuildServiceProvider();
@@ -88,8 +93,8 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        await _dbContainer.StartAsync();
-        _dbConnection = new SqlConnection($"{_dbContainer.ConnectionString}TrustServerCertificate=true;");
+        await _msSqlContainer.StartAsync();
+        _dbConnection = new SqlConnection(_msSqlContainer.GetConnectionString());
 
         await _elasticSearchContainer.StartAsync();
 
@@ -108,7 +113,7 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
     public new async Task DisposeAsync()
     {
-        await _dbContainer.StopAsync();
+        await _msSqlContainer.StopAsync();
         await _elasticSearchContainer.StartAsync();
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
-using NexusFit.Auth.API.Extensions;
 using NexusFit.Auth.API.services;
 using NexusFit.BuildingBlocks.Common.Extensions;
 using NexusFit.BuildingBlocks.Common.Logging;
@@ -45,8 +44,19 @@ builder.Services.AddDbContext<IdentityContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddIdentityServices(
-    builder.Configuration);
+
+builder.Services.AddIdentityCore<ApplicationUser>(opt => 
+    {
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequireDigit = false;
+    })
+    .AddRoles<ApplicationRole>()
+    .AddRoleManager<RoleManager<ApplicationRole>>()
+    .AddSignInManager<SignInManager<ApplicationUser>>()
+    .AddRoleValidator<RoleValidator<ApplicationRole>>()
+    .AddEntityFrameworkStores<IdentityContext>();
+
+builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddExceptionHandlingServices();
 

@@ -1,9 +1,8 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM mcr.microsoft.com/dotnet/sdk:6.0 as build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 as build
 EXPOSE 5001
 
 WORKDIR /app
 COPY . .
 
-RUN ["dotnet", "restore"]
 CMD ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5001" ]

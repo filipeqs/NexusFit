@@ -31,15 +31,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         new MsSqlBuilder()
         .WithCleanUp(true)
         .Build();
-    //private readonly TestcontainerDatabase _dbContainer =
-    //    new TestcontainersBuilder<MsSqlTestcontainer>()
-    //        .WithDatabase(new MsSqlTestcontainerConfiguration()
-    //        {
-    //            Password = "localdevpassword#123",
-    //        })
-    //        .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-    //        .WithCleanUp(true)
-    //        .Build();
 
     private readonly IContainer _elasticSearchContainer =
         new ContainerBuilder()
@@ -114,6 +105,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         await _msSqlContainer.StopAsync();
-        await _elasticSearchContainer.StartAsync();
+        await _elasticSearchContainer.StopAsync();
     }
 }

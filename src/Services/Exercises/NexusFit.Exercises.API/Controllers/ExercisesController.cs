@@ -24,7 +24,7 @@ public class ExercisesController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<ExerciseDetailsDto>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IReadOnlyList<Exercise>>> GetExercises()
+    public async Task<ActionResult<IReadOnlyList<ExerciseDetailsDto>>> GetExercises()
     {
         var exercises = await _repository.GetExercisesAsync();
 
@@ -84,7 +84,7 @@ public class ExercisesController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [Authorize]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]

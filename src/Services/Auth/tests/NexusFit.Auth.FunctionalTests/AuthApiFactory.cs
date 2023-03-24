@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using NexusFit.Auth.API;
 using NexusFit.Auth.API.Data;
 using NexusFit.Auth.API.Entities;
@@ -32,13 +33,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         .WithCleanUp(true)
         .Build();
 
-    private readonly IContainer _elasticSearchContainer =
-        new ContainerBuilder()
-            .WithImage("docker.elastic.co/elasticsearch/elasticsearch:7.9.2")
-            .WithExposedPort(9200)
-            .WithCleanUp(true)
-            .Build();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         var path = Assembly.GetAssembly(typeof(AuthApiFactory)).Location;
@@ -46,6 +40,12 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Tests.json")
             .Build();
+
+        builder.ConfigureLogging((WebHostBuilderContext context, ILoggingBuilder loggingBuilder) =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.AddConsole(options => options.IncludeScopes = true);
+        });
 
         builder.UseContentRoot(Path.GetDirectoryName(path))
             .UseEnvironment("Tests")
@@ -87,8 +87,6 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         await _msSqlContainer.StartAsync();
         _dbConnection = new SqlConnection(_msSqlContainer.GetConnectionString());
 
-        await _elasticSearchContainer.StartAsync();
-
         HttpClient = CreateClient();
         await InitializeRespawner();
     }
@@ -105,6 +103,5 @@ public class AuthApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         await _msSqlContainer.StopAsync();
-        await _elasticSearchContainer.StopAsync();
     }
 }

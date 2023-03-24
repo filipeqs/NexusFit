@@ -6,6 +6,7 @@ using AutoMapper;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using NexusFit.BuildingBlocks.Common.Models;
+using NexusFit.Exercises.API.Events;
 
 namespace NexusFit.Exercises.API.Controllers;
 
@@ -14,11 +15,14 @@ namespace NexusFit.Exercises.API.Controllers;
 public class ExercisesController : ControllerBase
 {
     private readonly IExerciseRepository _repository;
+    private readonly IExerciseCreatedEventPublisher _exerciseCreatedEventPublisher;
     private readonly IMapper _mapper;
 
-    public ExercisesController(IExerciseRepository repo, IMapper mapper)
+    public ExercisesController(IExerciseRepository repo, IMapper mapper,
+        IExerciseCreatedEventPublisher exerciseCreatedEventPublisher)
     {
         _repository = repo;
+        _exerciseCreatedEventPublisher = exerciseCreatedEventPublisher;
         _mapper = mapper;
     }
 
@@ -58,6 +62,7 @@ public class ExercisesController : ControllerBase
         var exercise = _mapper.Map<Exercise>(exerciseCreateDto);
 
         await _repository.CreateExerciseAsync(exercise);
+        await _exerciseCreatedEventPublisher.Publish(exercise);
 
         var exerciseDetails = _mapper.Map<ExerciseDetailsDto>(exercise);
 

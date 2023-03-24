@@ -1,11 +1,13 @@
 using System.Text;
 using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using NexusFit.BuildingBlocks.Common.Extensions;
 using NexusFit.BuildingBlocks.Common.Middleware;
+using NexusFit.Exercises.API.Events;
 using NexusFit.Exercises.API.Helpers;
 using NexusFit.Exercises.API.Repository;
 
@@ -40,6 +42,15 @@ builder.Services.AddAuthorization(opt =>
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
 builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
+
+builder.Services.AddMassTransit(config =>
+{
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+    });
+});
+builder.Services.AddScoped<IExerciseCreatedEventPublisher, ExerciseCreatedEventPublisher>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

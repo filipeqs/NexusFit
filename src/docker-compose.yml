@@ -13,6 +13,9 @@ services:
     kibana:
         image: docker.elastic.co/kibana/kibana:7.9.2
 
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+
     auth.api:
         image: ${DOCKER_REGISTRY-}nexusfitauthapi
         build:

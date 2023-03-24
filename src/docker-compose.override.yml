@@ -36,15 +36,24 @@ services:
             - elasticsearch
         ports:
             - '5601:5601'
+    rabbitmq:
+        container_name: rabbitmq
+        restart: always
+        ports:
+        - "5672:5672"
+        - "15672:15672"
 
     auth.api:
         container_name: auth.api
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - 'ConnectionStrings:DefaultConnection=Server=authdb;Database=AuthDb;User
-              Id=sa;Password=SwN12345678;'
+              Id=sa;Password=SwN12345678;TrustServerCertificate=true;'
             - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
             - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
+        depends_on:
+            - authdb
+            - exercisedb
         ports:
             - '55105:55105'
 
@@ -55,6 +64,9 @@ services:
             - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
             - 'DatabaseSettings:ConnectionString=mongodb://exercisedb:27017'
             - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
+        depends_on:
+            - elasticsearch
+            - exercisedb
         ports:
             - '5001:5001'
 

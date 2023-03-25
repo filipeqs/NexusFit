@@ -1,10 +1,7 @@
-using System.Text;
 using HealthChecks.UI.Client;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 using NexusFit.BuildingBlocks.Common.Extensions;
 using NexusFit.BuildingBlocks.Common.Middleware;
 using NexusFit.Exercises.API.Events;
@@ -39,8 +36,8 @@ builder.Services.AddAuthorization(opt =>
     opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
 });
 
-builder.Services.Configure<DatabaseSettings>(
-    builder.Configuration.GetSection("DatabaseSettings"));
+builder.Services.Configure<ExercisesDatabaseSettings>(
+    builder.Configuration.GetSection("ExercisesDatabaseSettings"));
 builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
 
 builder.Services.AddMassTransit(config =>

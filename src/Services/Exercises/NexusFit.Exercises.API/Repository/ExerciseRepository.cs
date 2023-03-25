@@ -9,9 +9,9 @@ public class ExerciseRepository : IExerciseRepository
 {
     private readonly IMongoCollection<Exercise> _exercisesCollection;
 
-	public ExerciseRepository(IOptions<DatabaseSettings> databaseSettings)
+	public ExerciseRepository(IOptions<ExercisesDatabaseSettings> databaseSettings, IConfiguration config)
 	{
-		var mongoClient = new MongoClient(databaseSettings.Value.ConnectionString);
+		var mongoClient = new MongoClient(config.GetConnectionString("MongoConnection"));
 		var mongoDatabase = mongoClient.GetDatabase(databaseSettings.Value.DatabaseName);
 		_exercisesCollection = mongoDatabase.GetCollection<Exercise>(databaseSettings.Value.CollectionName);
 	}

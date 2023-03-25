@@ -13,8 +13,8 @@ services:
         volumes:
             - elasticsearch-data:/usr/share/elasticsearch/data
 
-    authdb:
-        container_name: authdb
+    mssqldb:
+        container_name: mssqldb
         environment:
             SA_PASSWORD: 'SwN12345678'
             ACCEPT_EULA: 'Y'
@@ -22,8 +22,8 @@ services:
         ports:
             - '1433:1433'
 
-    exercisedb:
-        container_name: exercisedb
+    mongodb:
+        container_name: mongo
         restart: always
         ports:
             - "27017:27017"
@@ -47,13 +47,12 @@ services:
         container_name: auth.api
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - 'ConnectionStrings:DefaultConnection=Server=authdb;Database=AuthDb;User
+            - 'ConnectionStrings:DefaultConnection=Server=mssqldb;Database=AuthDb;User
               Id=sa;Password=SwN12345678;TrustServerCertificate=true;'
             - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
             - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
         depends_on:
-            - authdb
-            - exercisedb
+            - mssqldb
         ports:
             - '55105:55105'
 
@@ -62,11 +61,11 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - 'ConnectionStrings:LogConnection=http://elasticsearch:9200'
-            - 'DatabaseSettings:ConnectionString=mongodb://exercisedb:27017'
+            - 'DatabaseSettings:ConnectionString=mongodb://mongodb:27017'
             - TokenKey=671ca8c0-1e62-4e72-920b-bd29c002f619
         depends_on:
             - elasticsearch
-            - exercisedb
+            - mongodb
         ports:
             - '5001:5001'
 

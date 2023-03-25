@@ -51,14 +51,13 @@ public class ExerciseApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
         .ConfigureTestServices(services =>
         {
             var mongoConnection = _mongoContainer.GetConnectionString();
-            services.Configure<DatabaseSettings>((dbSettings) =>
+            services.Configure<ExercisesDatabaseSettings>((dbSettings) =>
             {
-                dbSettings.ConnectionString = mongoConnection;
                 dbSettings.CollectionName = configuration
-                    .GetSection("DatabaseSettings")
+                    .GetSection("ExercisesDatabaseSettings")
                     .GetValue<string>("CollectionName");
                 dbSettings.DatabaseName = configuration
-                    .GetSection("DatabaseSettings")
+                    .GetSection("ExercisesDatabaseSettings")
                     .GetValue<string>("DatabaseName");
             });
 

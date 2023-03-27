@@ -16,12 +16,7 @@ public class ExerciseCreatedEventPublisher : IExerciseCreatedEventPublisher
 
     public async Task Publish(Exercise exercise)
     {
-        var eventMessage = new ExerciseCreatedEvent
-        {
-            Id = exercise.Id,
-            Name = exercise.Name,
-            Description = exercise.Description
-        };
+        var eventMessage = new ExerciseCreatedEvent(exercise.Id, exercise.Name, exercise.Description);
 
         await _publishEndpoint.Publish(eventMessage);
     }

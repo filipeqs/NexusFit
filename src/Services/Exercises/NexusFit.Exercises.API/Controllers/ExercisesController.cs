@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using NexusFit.Exercises.API.Repository;
-using NexusFit.Exercises.API.Entities;
-using NexusFit.Exercises.API.Dtos;
 using AutoMapper;
-using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NexusFit.BuildingBlocks.Common.EventBus.Events;
 using NexusFit.BuildingBlocks.Common.Models;
-using NexusFit.Exercises.API.Events;
+using NexusFit.Exercises.API.Dtos;
+using NexusFit.Exercises.API.Entities;
+using NexusFit.Exercises.API.Repository;
+using System.Net;
 
 namespace NexusFit.Exercises.API.Controllers;
 
@@ -15,14 +15,14 @@ namespace NexusFit.Exercises.API.Controllers;
 public class ExercisesController : ControllerBase
 {
     private readonly IExerciseRepository _repository;
-    private readonly IExerciseCreatedEventPublisher _exerciseCreatedEventPublisher;
+    private readonly IExerciseCreatedEventRepository _exerciseCreatedEventRepository;
     private readonly IMapper _mapper;
 
     public ExercisesController(IExerciseRepository repo, IMapper mapper,
-        IExerciseCreatedEventPublisher exerciseCreatedEventPublisher)
+        IExerciseCreatedEventRepository exerciseCreatedEventRepository)
     {
         _repository = repo;
-        _exerciseCreatedEventPublisher = exerciseCreatedEventPublisher;
+        _exerciseCreatedEventRepository = exerciseCreatedEventRepository;
         _mapper = mapper;
     }
 
@@ -62,7 +62,8 @@ public class ExercisesController : ControllerBase
         var exercise = _mapper.Map<Exercise>(exerciseCreateDto);
 
         await _repository.CreateExerciseAsync(exercise);
-        await _exerciseCreatedEventPublisher.Publish(exercise);
+        var eventMessage = new ExerciseCreatedEvent(exercise.Id, exercise.Name, exercise.Description);
+        await _exerciseCreatedEventRepository.AddExerciseCreatedEvent(eventMessage);
 
         var exerciseDetails = _mapper.Map<ExerciseDetailsDto>(exercise);
 

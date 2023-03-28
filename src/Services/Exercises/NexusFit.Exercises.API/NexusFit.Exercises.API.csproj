@@ -21,7 +21,4 @@
   <ItemGroup>
     <None Remove="Events\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
 </Project>

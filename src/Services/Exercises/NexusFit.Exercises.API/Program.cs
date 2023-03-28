@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NexusFit.BuildingBlocks.Common.Extensions;
 using NexusFit.BuildingBlocks.Common.Middleware;
-using NexusFit.Exercises.API.Events;
 using NexusFit.Exercises.API.Helpers;
 using NexusFit.Exercises.API.Repository;
 
@@ -38,6 +37,8 @@ builder.Services.AddAuthorization(opt =>
 
 builder.Services.Configure<ExercisesDatabaseSettings>(
     builder.Configuration.GetSection("ExercisesDatabaseSettings"));
+builder.Services.Configure<EventsDatabaseSettings>(
+    builder.Configuration.GetSection("EventsDatabaseSettings"));
 builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
 
 builder.Services.AddMassTransit(config =>
@@ -47,7 +48,7 @@ builder.Services.AddMassTransit(config =>
         cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
     });
 });
-builder.Services.AddScoped<IExerciseCreatedEventPublisher, ExerciseCreatedEventPublisher>();
+builder.Services.AddScoped<IExerciseCreatedEventRepository, ExerciseCreatedEventRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

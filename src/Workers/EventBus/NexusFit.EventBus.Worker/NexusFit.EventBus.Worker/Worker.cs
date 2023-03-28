@@ -9,11 +9,11 @@ namespace NexusFit.EventBus.Worker;
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IBus _publishEndpoint;
     private readonly IMongoCollection<ExerciseCreatedEvent> _eventsCollection;
 
     public Worker(ILogger<Worker> logger, IOptions<EventsDatabaseSettings> databaseSettings,
-        IPublishEndpoint publishEndpoint, IConfiguration config)
+        IBus publishEndpoint, IConfiguration config)
     {
         _logger = logger;
         _publishEndpoint = publishEndpoint;
